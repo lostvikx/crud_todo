@@ -1,3 +1,4 @@
+// Remember command: sudo -u vik psql
 "use strict";
 
 const http = require("http");
@@ -8,22 +9,26 @@ const server = http.createServer((req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   // console.log(req)
 
+  // GET request (get all todos)
   if (method == "GET" && url == "/todos") {
     console.log("Received a GET request!");
   }
 
   // POST request (create a todo)
   if (method == "POST" && url == "/todos") {
-    let data = "";
+    let jsonData = "";
 
     req.on("data", chunk => {
-      data += chunk;
+      jsonData += chunk;
     });
 
-    req.on("end", () => {
-      console.log(JSON.parse(data));
+    req.on("end", async () => {
+      const data = JSON.parse(jsonData);
 
-      res.end();
+      const newTodo = await pool.query("INSERT INTO todo (description) VALUES ($1)", [data["description"]]);
+
+      // res.write(JSON.stringify(newTodo));
+      // res.end();
     });
   }
 

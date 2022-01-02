@@ -2,9 +2,9 @@
 
 const http = require("http");
 
-// POST Request
+// Sends a POST request
 const jsonData = JSON.stringify({
-  description: "Buy some bread 🍞",
+  description: "Submit reports 🤕",
 });
 
 const data = new TextEncoder().encode(jsonData);
@@ -24,7 +24,7 @@ const req = http.request(options, (res) => {
   // logs status code 200 for success!
   console.log(`StatusCode: ${res.statusCode}`);
 
-  // No clue what this does!
+  // No clue what this does! Look into it.
   // res.on("data", d => {
   //   process.stdout.write(d);
   // })
