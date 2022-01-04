@@ -20,7 +20,7 @@ const data = new TextEncoder().encode(jsonData);
 const options = {
   hostname: "localhost",
   port: 8080,
-  path: "/todos",
+  path: "/todos/",
   method: "POST",
   headers: {
     "Content-Type": "application/json",

@@ -3,6 +3,7 @@
 
 const http = require("http");
 const pool = require("./database/db.js");
+const URL = require("url");
 // const mimeTypes = require("./testing/mimeTypes.js");
 // console.log(mimeTypes);
 
@@ -10,12 +11,20 @@ const server = http.createServer((req, res) => {
 
   const { method, url } = req;
   res.setHeader("Access-Control-Allow-Origin", "*");
-  // console.log(req)
+  // console.log(url);
+  // console.log(URL.parse(url));
+
+  if (url.slice(url.length - 1) !== "/") {
+    res.writeHead(302, {
+      "Location": `${url}/`
+    });
+    res.end();
+  }
 
   // GET request (get all todos)
-  if (method == "GET" && url == "/todos") {
+  if (method == "GET" && url == "/todos/") {
 
-    console.log("Received a GET request at /todos");
+    // console.log("Received a GET request at /todos/");
 
     // get all the rows in the todo table
     const getAllToDos = async () => {
@@ -30,11 +39,32 @@ const server = http.createServer((req, res) => {
 
     // calling the async function
     getAllToDos();
-  }
+  } 
+
+  // GET request (get specific todo)
+  if (method == "GET" && /\/todos\/(\S+)\/$/.test(url)) {
+    // console.log("regex works");
+    const urlId = url.match(/\/todos\/(\S+)\/$/);
+
+    try {
+      const getToDo = async (id) => {
+        const toDo = await pool.query("SELECT * FROM todo WHERE todo_id = $1", [id]);
+
+        // response is in json format
+        res.setHeader("Content-Type", "application/json");
+        res.write(JSON.stringify(toDo["rows"]));
+        res.end();
+      }
+      getToDo(urlId[1]);
+    } catch(err) {
+      console.error(err);
+      res.end();
+    }
+  } 
 
   // POST request (create a todo)
-  if (method == "POST" && url == "/todos") {
-    console.log("POST request at /todos")
+  if (method == "POST" && url == "/todos/") {
+    console.log("POST request at /todos/");
     let jsonData = "";
 
     req.on("data", chunk => {
@@ -51,7 +81,7 @@ const server = http.createServer((req, res) => {
     });
   }
 
-  // if (method == "PUT" && )
+  // PUT request (update specific todo)
 
 });
 
