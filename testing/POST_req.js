@@ -1,22 +1,18 @@
 "use strict";
 
 const http = require("http");
+const prompt = require("prompt-sync")({sigint: true});
 
-let task = null;
-
-// process.stdin.on("data", (data) => {
-//   task = data.toString();
-//   process.exit();
-// });
+let task = prompt("Enter a task: ") || null;
 
 // encodes the json string to binary
 const jsonData = JSON.stringify({
-  description: (task === null) ? "Read more books 📖" : task,
+  description: (task === null) ? "Null task" : task,
 });
 
 const data = new TextEncoder().encode(jsonData);
 
-// http options (headers)
+// http request options (headers)
 const options = {
   hostname: "localhost",
   port: 8080,
