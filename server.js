@@ -26,12 +26,14 @@ const server = http.createServer((req, res) => {
     req.on("end", async () => {
       const data = JSON.parse(jsonData);
 
-      const newTodo = await pool.query("INSERT INTO todo (description) VALUES ($1)", [data["description"]]);
+      const newTodo = await pool.query("INSERT INTO todo (description) VALUES ($1) RETURNING *", [data["description"]]);
 
-      // res.write(JSON.stringify(newTodo));
+      res.write(JSON.stringify(newTodo["rows"]));
       res.end();
     });
   }
+
+  // if (method == "PUT" && )
 
 });
 
