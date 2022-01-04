@@ -11,11 +11,12 @@ const server = http.createServer((req, res) => {
 
   // GET request (get all todos)
   if (method == "GET" && url == "/todos") {
-    console.log("Received a GET request!");
+    console.log("Received a GET request at /todos");
   }
 
   // POST request (create a todo)
   if (method == "POST" && url == "/todos") {
+    console.log("POST request at /todos")
     let jsonData = "";
 
     req.on("data", chunk => {
@@ -28,7 +29,7 @@ const server = http.createServer((req, res) => {
       const newTodo = await pool.query("INSERT INTO todo (description) VALUES ($1)", [data["description"]]);
 
       // res.write(JSON.stringify(newTodo));
-      // res.end();
+      res.end();
     });
   }
 
