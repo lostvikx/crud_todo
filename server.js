@@ -2,7 +2,7 @@
 "use strict";
 
 const http = require("http");
-const pool = require("./db.js");
+const pool = require("./database/db.js");
 
 const server = http.createServer((req, res) => {
   const { method, url } = req;
@@ -12,6 +12,19 @@ const server = http.createServer((req, res) => {
   // GET request (get all todos)
   if (method == "GET" && url == "/todos") {
     console.log("Received a GET request at /todos");
+
+    // get all the rows in the todo table
+    const getAllToDos = async () => {
+
+      const allToDos = await pool.query("SELECT * FROM todo");
+
+      // response is in json format
+      res.write(JSON.stringify(allToDos["rows"]));
+      res.end();
+    }
+
+    // calling the async function
+    getAllToDos();
   }
 
   // POST request (create a todo)

@@ -11,7 +11,7 @@ let task = null;
 
 // encodes the json string to binary
 const jsonData = JSON.stringify({
-  description: (task === null) ? "Watch a movie!" : task,
+  description: (task === null) ? "Change Dir!" : task,
 });
 
 const data = new TextEncoder().encode(jsonData);
