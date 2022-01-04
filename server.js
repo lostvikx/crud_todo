@@ -3,14 +3,18 @@
 
 const http = require("http");
 const pool = require("./database/db.js");
+// const mimeTypes = require("./testing/mimeTypes.js");
+// console.log(mimeTypes);
 
 const server = http.createServer((req, res) => {
+
   const { method, url } = req;
   res.setHeader("Access-Control-Allow-Origin", "*");
   // console.log(req)
 
   // GET request (get all todos)
   if (method == "GET" && url == "/todos") {
+
     console.log("Received a GET request at /todos");
 
     // get all the rows in the todo table
@@ -19,6 +23,7 @@ const server = http.createServer((req, res) => {
       const allToDos = await pool.query("SELECT * FROM todo");
 
       // response is in json format
+      res.setHeader("Content-Type", "application/json");
       res.write(JSON.stringify(allToDos["rows"]));
       res.end();
     }
