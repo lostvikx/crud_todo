@@ -4,15 +4,15 @@
 const http = require("http");
 const pool = require("./database/db.js");
 const URL = require("url");
+const { createReadStream } = require("fs");
 // const mimeTypes = require("./testing/mimeTypes.js");
 // console.log(mimeTypes);
 
 const server = http.createServer((req, res) => {
 
   const { method, url } = req;
+  // Allows all requests!
   res.setHeader("Access-Control-Allow-Origin", "*");
-  // console.log(url);
-  // console.log(URL.parse(url));
 
   if (url.slice(url.length - 1) !== "/") {
     res.writeHead(302, {
@@ -55,6 +55,7 @@ const server = http.createServer((req, res) => {
         res.write(JSON.stringify(toDo["rows"]));
         res.end();
       }
+      
       getToDo(urlId[1]);
     } catch(err) {
       console.error(err);
@@ -115,6 +116,7 @@ const server = http.createServer((req, res) => {
     }
   }
 
+  // DELETE request
   if (method == "DELETE" && /\/todos\/(\d+)\/$/.test(url)) {
 
     const urlId = url.match(/\/todos\/(\d+)\/$/);
@@ -137,6 +139,22 @@ const server = http.createServer((req, res) => {
       res.end();
     }
 
+  }
+
+  if (method == "GET" && /\/todos\/\D+\d*\/$/.test(url)) {
+
+    res.statusCode = 404;
+    res.setHeader("Content-Type", "text/html");
+
+    const readStream = createReadStream("./views/404.html");
+
+    readStream.on("error", (err) => {
+      res.end(err);
+    })
+
+    readStream.on("open", () => {
+      readStream.pipe(res);
+    });
   }
 
 });
