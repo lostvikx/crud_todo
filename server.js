@@ -123,7 +123,7 @@ const server = http.createServer((req, res) => {
         res.statusCode = 200;
         // response is in json format
         res.setHeader("Content-Type", "application/json");
-        res.write(JSON.stringify("Todo was updated!"));
+        res.write(JSON.stringify("Task was updated!"));
         res.end();
       });
 
@@ -152,7 +152,7 @@ const server = http.createServer((req, res) => {
       res.statusCode = 200;
       // response is in json format
       res.setHeader("Content-Type", "application/json");
-      res.write(JSON.stringify("Todo was deleted!"));
+      res.write(JSON.stringify("Task was deleted!"));
       res.end();
 
     } catch (err) {
