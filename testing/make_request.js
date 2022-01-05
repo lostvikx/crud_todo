@@ -1,3 +1,4 @@
+#!/usr/bin / env node
 "use strict";
 
 const http = require("http");
@@ -48,7 +49,7 @@ const jsonData = JSON.stringify({
   description: task
 });
 
-// encodes the json string to binary
+// encodes the json string to Unit8Array
 const data = new TextEncoder().encode(jsonData);
 
 // http request options (headers)
@@ -66,21 +67,22 @@ const options = {
 // Sends a POST/PUT/DELETE request
 const req = http.request(options, (res) => {
 
-  // stdout to terminal, data is in binary
+  // stdout to terminal, data is in Unit8Array
   // on returning data after POST or PUT req
   res.on("data", data => {
     process.stdout.write(`${data}\n\r`);
   })
 
   req.on("error", err => {
-    console.log("is this the error?")
+    console.log("Error caught 🤕")
     console.error(err);
   })
 
-  // logs status code 200 for success!
+  // Logs status code 200 for success!
   console.log(`StatusCode: ${res.statusCode}`);
 
 });
 
+// Send the Unit8Array
 req.write(data);
 req.end();
