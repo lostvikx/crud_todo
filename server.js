@@ -42,9 +42,9 @@ const server = http.createServer((req, res) => {
   } 
 
   // GET request (get specific todo)
-  if (method == "GET" && /\/todos\/(\S+)\/$/.test(url)) {
+  if (method == "GET" && /\/todos\/(\d+)\/$/.test(url)) {
     // console.log("regex works");
-    const urlId = url.match(/\/todos\/(\S+)\/$/);
+    const urlId = url.match(/\/todos\/(\d+)\/$/);
 
     try {
       const getToDo = async (id) => {
@@ -60,7 +60,7 @@ const server = http.createServer((req, res) => {
       console.error(err);
       res.end();
     }
-  } 
+  }
 
   // POST request (create a todo)
   if (method == "POST" && url == "/todos/") {
@@ -83,10 +83,10 @@ const server = http.createServer((req, res) => {
   }
 
   // PUT request (update specific todo)
-  if (method == "PUT" && /\/todos\/(\S+)\/$/.test(url)) {
-    console.log("PUT request at", url);
-    const urlId = url.match(/\/todos\/(\S+)\/$/);
-    console.log(urlId);
+  if (method == "PUT" && /\/todos\/(\d+)\/$/.test(url)) {
+    // console.log("PUT request at", url);
+    const urlId = url.match(/\/todos\/(\d+)\/$/);
+    // console.log(urlId);
 
     try {
       let jsonData = "";
@@ -97,11 +97,11 @@ const server = http.createServer((req, res) => {
 
       req.on("end", async () => {
         const data = JSON.parse(jsonData);
-        console.log([String(data["description"]), Number(urlId[1])]);
+        // console.log([data["description"], urlId[1]]);
 
         const updateTodo = await pool.query(
-          "UPDATE todo SET description = '$1' WHERE todo_id = $2;", 
-          [String(data["description"]), Number(urlId[1])]
+          "UPDATE todo SET description = $1 WHERE todo_id = $2;", 
+          [data["description"], urlId[1]]
         );
 
         res.setHeader("Content-Type", "application/json");
@@ -115,14 +115,14 @@ const server = http.createServer((req, res) => {
     }
   }
 
-  if (method == "DELETE" && /\/todos\/(\S+)\/$/.test(url)) {
+  if (method == "DELETE" && /\/todos\/(\d+)\/$/.test(url)) {
 
-    const urlId = url.match(/\/todos\/(\S+)\/$/);
+    const urlId = url.match(/\/todos\/(\d+)\/$/);
     
     try {
       const delToDo = async (id) => {
         
-        const deleteTodo = await pool.query("DELETE FROM todo WHERE todo_id = $1", [id]);
+        const deleteTodo = await pool.query("DELETE FROM todo WHERE todo_id = $1;", [id]);
 
       }
 
@@ -137,7 +137,6 @@ const server = http.createServer((req, res) => {
       res.end();
     }
 
-    res.end();
   }
 
 });

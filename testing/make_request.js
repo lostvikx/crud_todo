@@ -40,7 +40,7 @@ if (toDoId !== null) {
   path += "/";
 }
 
-console.log(`path: ${path}, method: ${req_method}`);
+console.log(`path: ${path} | method: ${req_method}`);
 
 // convert obj to json
 const jsonData = JSON.stringify({
@@ -73,6 +73,7 @@ const req = http.request(options, (res) => {
   })
 
   req.on("error", err => {
+    console.log("is this the error?")
     console.error(err);
   })
 
