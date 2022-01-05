@@ -19,22 +19,44 @@ try {
 
 console.log(req_method);
 
-let task = prompt("Enter a task: ") || null;
+let toDoId = null;
 
-// encodes the json string to binary
+if (req_method != "POST") {
+  toDoId = prompt("Enter todo_id: ");
+  toDoId = Number(toDoId);
+}
+
+let task = null;
+
+if (req_method != "DELETE") {
+  task = prompt("Enter a task: ");
+  task = String(task);
+}
+
+let path = "/todos/"
+
+if (toDoId !== null) {
+  path += String(toDoId);
+  path += "/";
+}
+
+console.log(`path: ${path}, method: ${req_method}`);
+
+// convert obj to json
 const jsonData = JSON.stringify({
-  todo_id: null,
-  description: (task === null) ? "Null task" : task,
+  todo_id: toDoId,
+  description: task
 });
 
+// encodes the json string to binary
 const data = new TextEncoder().encode(jsonData);
 
 // http request options (headers)
 const options = {
   hostname: "localhost",
   port: 8080,
-  path: "/todos/",
-  method: String(req_method),
+  path: path,
+  method: req_method,
   headers: {
     "Content-Type": "application/json",
     "Content-Length": data.length
@@ -44,10 +66,8 @@ const options = {
 // Sends a POST/PUT/DELETE request
 const req = http.request(options, (res) => {
 
-  // logs status code 200 for success!
-  console.log(`StatusCode: ${res.statusCode}`);
-
-  // No clue what this does! Look into it.
+  // stdout to terminal, data is in binary
+  // on returning data after POST or PUT req
   res.on("data", data => {
     process.stdout.write(`${data}\n\r`);
   })
@@ -55,6 +75,9 @@ const req = http.request(options, (res) => {
   req.on("error", err => {
     console.error(err);
   })
+
+  // logs status code 200 for success!
+  console.log(`StatusCode: ${res.statusCode}`);
 
 });
 
