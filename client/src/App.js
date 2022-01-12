@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Todo from "./components/Todo";
 
-// look at useEffect
-
 const App = () => {
 
   const [todos, setTodos] = useState([]);
