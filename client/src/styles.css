@@ -4,6 +4,7 @@
   box-sizing: border-box;
 }
 
-h1 {
-  font-weight: 400;
+.container {
+  max-width: 80%;
+  margin: 0 auto;
 }

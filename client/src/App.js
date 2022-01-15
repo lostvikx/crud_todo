@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import Todo from "./components/Todo";
+import InputTodo from "./components/InputTodo";
 
 const App = () => {
 
+  // initial state is []
   const [todos, setTodos] = useState([]);
 
   const getTodos = async () => {
@@ -37,6 +39,7 @@ const App = () => {
   return (
     <div className="container">
       {allTodos}
+      <InputTodo />
     </div>
   );
 
